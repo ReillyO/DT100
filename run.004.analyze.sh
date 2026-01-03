@@ -1,6 +1,16 @@
 #!/bin/bash
 
-# note that analysis expects Python3
+# note that analysis expects Python3 to be installed and available
+# Script will:
+#  - Collect symmetry-corrected RMSDs for each pose in each system and
+#    dump them into a specified .txt file ($rmsd_dump_file)
+#  - Use a Python script to determine whether each system saw a Success,
+#    Sampling Failure, or Scoring failure using the collected RMSDs
+#  - The same Python script will compare the performance to a bundled 
+#    reference and output a summary with any noted changes
+
+# assumes pose reproduction (step 003) has been run successfully
+# (script will note if any systems appear to have suffered errors)
 
 # set some paths
 dockdir="${DOCKHOME}/bin/"
