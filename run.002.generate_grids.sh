@@ -116,13 +116,10 @@ wait
 
 echo "Finished grid generation."
 
-successful_systems=0
-
 while read system; do
 	if [ -s ${sysdir}/${system}/002.grid_gen/*bmp ]; then
-		((successful_systems=successful_systems+1))
 	else
-		echo "${system} failed grid generation!"
+		echo "WARNING: ${system} failed grid generation!"
 	fi
 done < ${paramdir}/system_list.txt
 

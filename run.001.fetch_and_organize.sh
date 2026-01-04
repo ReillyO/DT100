@@ -41,10 +41,6 @@ if [ -s ${paramdir} ]; then
 	rm -r ${paramdir}
 fi
 
-if [ -s ${scriptdir} ]; then
-	echo -e "Removing old script directory...\n"
-        rm -r ${scriptdir}
-fi
 
 echo -e "Creating directory structure and moving files...\n"
 mkdir ${sysdir}
@@ -61,9 +57,6 @@ done < ${rootdir}/DT100/params/system_list.txt
 mkdir ${paramdir}
 cp ${rootdir}/DT100/params/* ${paramdir}/
 
-mkdir ${scriptdir}
-cp ${rootdir}/DT100/scripts/* ${scriptdir}/
-
 
 echo -e "Cleaning up workspace...\n"
 if [ -s ${rootdir}/trash/ ]; then rm -r ${MAINDIR}/trash; fi
@@ -71,17 +64,7 @@ mkdir ${rootdir}/trash
 mv ${rootdir}/DT100/ ${MAINDIR}/trash/
 mv ${rootdir}/DT100.tar.gz ${MAINDIR}/trash
 
-echo -e "Done!"
-echo -e "All system files are located in ./`realpath --relative-to=./ ${sysdir}`"
+echo -e "Done!\n"
+echo -e "All system files are located in ./`realpath --relative-to=./ ${sysdir}`\n"
 echo -e "Temporary files have been moved to ./`realpath --relative-to=./ ${rootdir}/trash` and can be removed if needed\n" 
 echo -e "Next step is run.002.generate_grids.sh\n"
-
-
-
-
-
-
-
-
-
-
