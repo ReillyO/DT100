@@ -30,11 +30,10 @@ echo "Starting grid generation for all systems..."
 while read system; do 
 	### Move to working directory
 	if [ ! -s ${sysdir}/${system}/002.grid_gen ]; then
-		echo "Could not find ${system} system directory! Skipping..."
-		continue
-	else
-		cd ${sysdir}/${system}/002.grid_gen/
+		mkdir ${sysdir}/${system}/002.grid_gen
 	fi
+	
+	cd ${sysdir}/${system}/002.grid_gen/
 	
 	
 	

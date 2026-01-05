@@ -53,7 +53,10 @@ The systems and random seed experiments performed can be easily edited with the 
 After unpacking the downloaded TAR file, the `SYSDIR` directory contains a directory for every system, labeled as its 4-letter PDB code. To add a system for analysis:
 1) Create a new directory in `SYSDIR` named as the system's 4-character PDB code (eg 1A29)
 2) Create a directory `001.files` in the newly created 4-character folder (SYSDIR/1A29/001.files)
-3) In `001.files`, add a charged receptor Mol2 file, charged ligand Mol2 file, and a receptor sphere file (.sph)
+3) In `001.files`, add:
+* a charged receptor Mol2 file with name format SYSCODE.rec.clean.mol2 
+* charged ligand Mol2 file with name format SYSCODE.lig.am1bcc.mol2 
+* and a receptor sphere file with name format SYSCODE.rec.clust.close.sph
 4) In the `zzz.parameters` directory, there is a file named `system_list.txt` that is referenced by the scripts. Open it in a text editor, and add the new system PDB code on a new line.
 The new system should now be recognized and integrated into the benchmark the next time it is run.
 
