@@ -62,4 +62,5 @@ The new system should now be recognized and integrated into the benchmark the ne
 
 ## Adding Tests
 
-New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the array. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary.
+New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary.
+
