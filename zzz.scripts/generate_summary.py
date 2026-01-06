@@ -91,13 +91,28 @@ for expt in expt_perf_dict.keys():
 
 
 # write out verbose per-case RMSD CSV
+max_length = 0
+# first determine longest RMSD list
+for case in case_rmsd_dict.keys():
+    l = len(case_rmsd_dict[case])
+    if l > max_length:
+        max_length = l
 output = ""
 raw_data_file = out_prefix + "_Raw_Data.csv"
+# "top row" labels
+output += ","
+for i in range(1, max_length+1):
+    output += "Pose" + str(i) + ","
+output = output.rsplit(",",1)[0]
+output += "\n"
+# RMSD rows
 for key in case_rmsd_dict.keys():
     output += key+","
     output += ",".join(map(str, case_rmsd_dict[key])) + "\n"
 with open(raw_data_file, 'w') as f:
     f.write(output)
+
+
 
 # write out verbose per-system success/fail CSV
 output = ","
@@ -184,7 +199,7 @@ for expt in expt_dict:
     output += expt + ": " + ", ".join(str(x).rjust(4) for x in expt_dict[expt]) + "\n"
 
 # comparison to given reference
-output += "\n#### Comparing to Reference (ref -> this trial) ####\n"
+output += "\n#### Comparing Behavior to Reference (ref -> this trial) ####\n"
 if changed_fails == 0:
     output += "Perfect agreement with cases present in reference file " + ref_file + "\n"
     if len(non_ref_expts) > 0:
@@ -193,8 +208,8 @@ else:
     for case in fail_mismatches.keys():
         output += case + ": " + fail_mismatches[case] + "\n"
 
-# specific failures
-output += "\n#### Failures ####\n"
+# test-specific failures
+output += "\n#### DOCK Failures In This Trial ####\n"
 for case in sorted(case_perf_dict.keys()):
     if case_perf_dict[case] != "Success":
         output += case + ": " + case_perf_dict[case] + "\n"
