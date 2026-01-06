@@ -45,7 +45,7 @@ done < ${paramdir}/system_list.txt
 out_prefix=${rootdir}/DT100
 ref_file=${paramdir}/ref_DT100_Performance_Summary.txt
 
-echo "Analyzing RMSDs...\n"
+echo "Analyzing RMSDs..."
 
 # python3  generate_summary.py                RMSDfile        OutPrefix            ReferenceFile
 python3 ${scriptdir}/generate_summary.py  ${rmsd_dump_file} ${out_prefix} `realpath --relative-to=./ ${ref_file}`
