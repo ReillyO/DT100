@@ -16,7 +16,7 @@ echo `date`
 
 # generate all grids (script waits until all grid instances have
 # stopped before moving to next step)
-bash run.002.generate_grid.sh 
+bash run.002.generate_grids.sh 
 wait
 
 echo `date`
