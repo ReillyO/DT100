@@ -25,7 +25,7 @@ The pose reproduction simplex random seed trials are also modifiable and can be 
 The steps can be run one-by-one in an interactive bash terminal in the order indicated by the prefix numbers (000, 001, 002, etc).
 
 1) `source run.000.setup_env.sh` will set the needed paths in their environment variables.
-2) `bash run.001.fetch_and_organize` will use `wget` to retrieve a tarball of system files, and unpack them into a standardized directory structure.
+2) `bash run.001.fetch_and_organize.sh` will use `wget` to retrieve a tarball of system files, and unpack them into a standardized directory structure.
 3) `bash run.002.generate_grids.sh` will use `grid` to generate receptor grids - this step is computationally intensive.
 4) `bash run.003.pose_reproduction.sh` will use `dock6` to perform pose reproduction trials using all random seeds in the file - this step is computationally intensive.
 5) `bash run.004.analyze.sh` will collect the results of each pose reproduction and report system successes as well as how they compare to the provided reference file - it requires Python3 to be installed and accessible.
@@ -63,4 +63,5 @@ The new system should now be recognized and integrated into the benchmark the ne
 ## Adding Tests
 
 New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary.
+
 
