@@ -30,6 +30,6 @@ if [ ! -e ${DOCKHOME} ]; then
 	unset ${DOCKHOME}
 fi
 
-# URL to download testset  (TODO: replace)
-export DT100_URL="https://drive.google.com/uc?export=download&id=1gWEwYii6Y9v2yApoSz6nDbkG51GWmzWr"
+# URL to download testset from Rizzo lab page
+export DT100_URL="https://ringo.ams.stonybrook.edu/downloads/DT100/DT100.tar.gz"
 

@@ -21,7 +21,7 @@ scriptdir="${rootdir}/zzz.scripts"
 DT_URL=${DT100_URL}
 
 echo -e "\nFetching files (speed may vary depending on internet connection)\n"
-wget --directory-prefix=${rootdir} ${DT_URL} -O DT100.tar.gz
+wget --no-check-certificate --directory-prefix=${rootdir} ${DT_URL} -O DT100.tar.gz
 
 if [ ! -s ${rootdir}/DT100.tar.gz ]; then
 	echo "Something went wrong with the download. Exiting..."
