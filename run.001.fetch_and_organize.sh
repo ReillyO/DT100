@@ -20,8 +20,12 @@ paramdir="${rootdir}/zzz.parameters/"
 scriptdir="${rootdir}/zzz.scripts"
 DT_URL=${DT100_URL}
 
-echo -e "\nFetching files (speed may vary depending on internet connection)\n"
-wget --no-check-certificate --directory-prefix=${rootdir} ${DT_URL} -O DT100.tar.gz
+if [ ! -e ${rootdir}/DT100.tar.gz ]; then 
+	echo -e "\nFetching files (speed may vary depending on internet connection)\n"
+	wget --no-check-certificate --directory-prefix=${rootdir} ${DT_URL} -O DT100.tar.gz
+else
+	echo -e "\nFound tarball with filename DT100.tar.gz; systems in this file will be used for the DT100 test. If you would like the script to re-download the tarball from the DOCK website, delete the DT100.tar.gz file from this directory and run the script again.\n"
+fi
 
 if [ ! -s ${rootdir}/DT100.tar.gz ]; then
 	echo "Something went wrong with the download. Exiting..."
