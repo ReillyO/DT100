@@ -160,12 +160,18 @@ with open(ref_file, 'r') as f:
             state = "Fails"
 
 changed_fails = 0
+not_in_ref_count = 0
+print(ref_expts)
 
 # check cases where current test failed
 for case in case_fails:
     if case not in ref_case_fails_dict.keys():
-        fail_mismatches[case] = "Success -> " + case_perf_dict[case]
-        changed_fails += 1
+        sys, expt = case.split("_", 1)
+        if expt in ref_expts:
+            fail_mismatches[case] = "Success -> " + case_perf_dict[case]
+            changed_fails += 1
+        else:
+            not_in_ref_count += 1
     elif case_perf_dict[case] != ref_case_fails_dict[case]:
         fail_mismatches[case] = ref_case_fails_dict[case] + " -> " + case_perf_dict[case]
         changed_fails += 1
@@ -200,13 +206,20 @@ for expt in expt_dict:
 
 # comparison to given reference
 output += "\n#### Comparing Behavior to Reference (ref -> this trial) ####\n"
+
+# warnings for experiments not in reference
+if len(non_ref_expts) > 0:
+    output += "WARNING: case(s) " + str(non_ref_expts) + " could not be compared to given reference!\n"
+    output += "    This means " + str(not_in_ref_count) + " systems experiencing errors could not be compared.\n"
+    output += "    The failures are still reported below in DOCK Failures.\n"
+    output += "    (usually this means you are running a random seed not present in the reference file)\n"
+
 if changed_fails == 0:
     output += "Perfect agreement with cases present in reference file " + ref_file + "\n"
-    if len(non_ref_expts) > 0:
-        output += "NOTE: case(s) " + str(non_ref_expts) + " could not be compared to given reference!\n"
 else:
     for case in fail_mismatches.keys():
         output += case + ": " + fail_mismatches[case] + "\n"
+
 
 # test-specific failures
 output += "\n#### DOCK Failures In This Trial ####\n"
