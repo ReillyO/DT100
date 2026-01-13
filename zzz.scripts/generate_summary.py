@@ -164,7 +164,7 @@ changed_fails = 0
 # check cases where current test failed
 for case in case_fails:
     if case not in ref_case_fails_dict.keys():
-        fail_mismatches[case] = "Not present in reference -> " + case_perf_dict[case]
+        fail_mismatches[case] = "Success -> " + case_perf_dict[case]
         changed_fails += 1
     elif case_perf_dict[case] != ref_case_fails_dict[case]:
         fail_mismatches[case] = ref_case_fails_dict[case] + " -> " + case_perf_dict[case]
