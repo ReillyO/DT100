@@ -13,7 +13,8 @@ def performance_string_from_list(rmsd_list):
         if rmsd < 2.0: return "Scoring Fail"
     return "Sampling Fail"
 
-
+def aworsethanb(perf1, perf2):
+    return (perf2 == "Success" and (perf1 == "Scoring Fail" or perf1 == "Sampling Fail")) or (perf2 == "Scoring Fail" and perf1 == "Sampling Fail")
 
 ##############################################
 #               Main                         #
@@ -160,7 +161,9 @@ with open(ref_file, 'r') as f:
             state = "Fails"
 
 changed_fails = 0
+changed_successes = 0
 not_in_ref_count = 0
+ref_untested_count = 0
 print(ref_expts)
 
 # check cases where current test failed
@@ -172,19 +175,20 @@ for case in case_fails:
             changed_fails += 1
         else:
             not_in_ref_count += 1
-    elif case_perf_dict[case] != ref_case_fails_dict[case]:
-        fail_mismatches[case] = ref_case_fails_dict[case] + " -> " + case_perf_dict[case]
-        changed_fails += 1
 
 # check cases where reference notes failure
 for case in ref_case_fails_dict.keys():
     if case not in case_perf_dict.keys():
-        fail_mismatches[case] = ref_case_fails_dict[case] + " -> Not tested"
-        changed_fails += 1
+        # fail_mismatches[case] = ref_case_fails_dict[case] + " -> Not tested"
+        ref_untested_count += 1
     elif case in case_perf_dict.keys():
         if ref_case_fails_dict[case] != case_perf_dict[case]:
+            print("hello" + case)
             fail_mismatches[case] = ref_case_fails_dict[case] + " -> " + case_perf_dict[case]
-            changed_fails += 1
+            if aworsethanb(ref_case_fails_dict[case], case_perf_dict[case]):
+                changed_successes += 1
+            else:
+                changed_fails += 1
 
 
 for expt in expt_perf_dict.keys():
@@ -198,6 +202,17 @@ output += "#######################################################\n\n"
 nsys = str(len(sys_perf_dict.keys()))
 nexpt = str(len(expt_perf_dict.keys()))
 output += "Test performed on " + nsys + " systems with " + nexpt + " different seeds/conditions.\n"
+diff = changed_successes - changed_fails
+if diff > 0:
+    output += "DOCK performed better than the reference with net " +str(diff)+" previous failures now successes.\n"
+elif diff < 0:
+    output += "DOCK performed worse than the reference with net " +str(abs(diff))+" previous successes now failures.\n"
+else:
+    output += "DOCK performed equally well compared to the reference with net " +str(diff)+" system results changed.\n"
+
+output += "("+ str(changed_successes) + " systems improved, " + str(changed_fails) + " systems worsened)\n" 
+
+
 
 # success/fail reporting
 output += "\n#### Success/ScoreFail/SampleFail/SystemError ####\n"
@@ -214,10 +229,13 @@ if len(non_ref_expts) > 0:
     output += "    The failures are still reported below in DOCK Failures.\n"
     output += "    (usually this means you are running a random seed not present in the reference file)\n"
 
+if ref_untested_count > 0:
+    output += "NOTE: there are " + str(ref_untested_count) + " fail cases in the reference that were not tested in the current run.\n"
+
 if changed_fails == 0:
     output += "Perfect agreement with cases present in reference file " + ref_file + "\n"
 else:
-    for case in fail_mismatches.keys():
+    for case in sorted(fail_mismatches.keys()):
         output += case + ": " + fail_mismatches[case] + "\n"
 
 
