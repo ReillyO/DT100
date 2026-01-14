@@ -164,7 +164,6 @@ changed_fails = 0
 changed_successes = 0
 not_in_ref_count = 0
 ref_untested_count = 0
-print(ref_expts)
 
 # check cases where current test failed
 for case in case_fails:
