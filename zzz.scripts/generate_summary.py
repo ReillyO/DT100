@@ -183,7 +183,6 @@ for case in ref_case_fails_dict.keys():
         ref_untested_count += 1
     elif case in case_perf_dict.keys():
         if ref_case_fails_dict[case] != case_perf_dict[case]:
-            print("hello" + case)
             fail_mismatches[case] = ref_case_fails_dict[case] + " -> " + case_perf_dict[case]
             if aworsethanb(ref_case_fails_dict[case], case_perf_dict[case]):
                 changed_successes += 1
