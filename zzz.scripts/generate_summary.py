@@ -135,7 +135,7 @@ with open(perf_summary_file, 'w') as f:
 # Then check if same errors are present in current test
 # using the Fails section
 fail_mismatches = defaultdict(str)
-
+ref_expt_num_dict = defaultdict(list)
 ref_case_fails_dict = defaultdict(str)
 with open(ref_file, 'r') as f:
     # Expts, Fails, None
@@ -149,7 +149,11 @@ with open(ref_file, 'r') as f:
 
         if line == "\n": continue
         if state == "Expts": # read expts in the reference file
-            ref_expt, _ = line.rsplit(":", 1)
+            ref_expt, vals = line.rsplit(":", 1)
+            vals = vals.split(", ")
+            for i in range(len(vals)):
+                vals[i] = vals[i].strip()
+            ref_expt_num_dict[ref_expt] = vals
             ref_expts.append(ref_expt)
         elif state == "Fails": # case fails in the reference file
             ref_case, ref_result = line.rsplit(":", 1)
@@ -214,8 +218,22 @@ output += "("+ str(changed_successes) + " systems improved, " + str(changed_fail
 
 # success/fail reporting
 output += "\n#### Success/ScoreFail/SampleFail/SystemError ####\n"
+result_diff = [0,0,0,0] # success, scoref, samplef, error
 for expt in expt_dict:
-    output += expt + ": " + ", ".join(str(x).rjust(4) for x in expt_dict[expt]) + "\n"
+    output += expt.ljust(6) + ": "
+    for i in range(4):
+        if expt in ref_expts:
+            output += "".join([str(expt_dict[expt][i]), "(", ref_expt_num_dict[expt][i], ")"]).rjust(8) + ", "
+            result_diff[i] += (expt_dict[expt][i] - int(ref_expt_num_dict[expt][i]))
+        else: 
+            output += "".join([str(expt_dict[expt][i]), "( )"]).rjust(8) + ", "
+    output += "\n"
+output += "\n"
+output += "Change: " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in result_diff) + "\n"
+avg_diff = [z/float(nexpt) for z in result_diff]
+output += "Avg:    " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in avg_diff) + "\n"
+if abs(avg_diff[0]) > 1:
+    output += "On average, at least one system worsened per trial. This may be something to investigate with larger-scale trials.\n"
 
 # comparison to given reference
 output += "\n#### Comparing Behavior to Reference (ref -> this trial) ####\n"
