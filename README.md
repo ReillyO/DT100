@@ -38,11 +38,11 @@ If the user has access to a Slurm-enabled computer cluster, the `run_all_steps.s
 
 ## 4) Interpreting Results
 
-The script will output a high-level summary file with suffix `_Performance_Summary.txt`, which provides comparison to the reference file in `zzz.parameters` as well as a list of system-seed combinations that produce errors. This should be sufficient for the majority of quick "sanity check" analyses. It is also output to console by the `run.004` script.
+The script will output a high-level summary file with suffix `_Performance_Summary.txt`, which provides comparison to the reference file in `zzz.parameters` as well as a list of system-seed combinations (hereafter "cases") that produce errors. This should be sufficient for the majority of quick "sanity check" analyses. It is also output to console by the `run.004` script.
 
-The script also provides per-system performance data ("Success", "Sampling Failure", "Scoring Failure") in a CSV file with suffix `_System_Performance.csv` for ready analysis. Rows are labeled with system PDB code (eg, 1A28), and columns with seed labels.
+The script also provides per-case performance data ("Success", "Sampling Failure", "Scoring Failure") in a CSV file with suffix `_System_Performance.csv` for ready analysis. Rows are labeled with system PDB code (eg, 1A28), and columns with seed labels. If for some reason no docked molecules could be produced, the value will be "No Poses Generated".
 
-Finally, collated per-system RMSDs are collected in a file with suffix `_Raw_Data.csv`, where each row begins with a case label (eg, 1A28_seed1) followed by comma-separated RMSDs in the order they appeared for fine-grain analysis. 
+Finally, per-case RMSDs are collected in a file with suffix `_Raw_Data.csv`, where each row begins with a case label (eg, 1A28_seed1) followed by comma-separated RMSDs in the order they appeared for fine-grain analysis. 
 
 # Modifications
 
@@ -58,10 +58,11 @@ After unpacking the downloaded TAR file, the `SYSDIR` directory contains a direc
 * charged ligand Mol2 file with name format SYSCODE.lig.am1bcc.mol2 
 * and a receptor sphere file with name format SYSCODE.rec.clust.close.sph
 4) In the `zzz.parameters` directory, there is a file named `system_list.txt` that is referenced by the scripts. Open it in a text editor, and add the new system PDB code on a new line.
-The new system should now be recognized and integrated into the benchmark the next time it is run.
+The new system should now be recognized and integrated into the benchmark the next time it is run. If this system is to be permanently integrated into the testset, any errors it produces should be added to the `ref_DT100_Performance_Summary.txt` file for future distribution.
 
 ## Adding Tests
 
-New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary.
+New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference file contained in DT100.tar.gz at time of writing contains data on random seeds 1 thru 10, so any of these can be added if additional data is desired.
+
 
 
