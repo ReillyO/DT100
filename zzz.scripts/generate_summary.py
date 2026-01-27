@@ -151,6 +151,7 @@ with open(ref_file, 'r') as f:
         if state == "Expts": # read expts in the reference file
             ref_expt, vals = line.rsplit(":", 1)
             vals = vals.split(", ")
+            ref_expt = ref_expt.strip()
             for i in range(len(vals)):
                 vals[i] = vals[i].strip()
             ref_expt_num_dict[ref_expt] = vals
@@ -212,12 +213,12 @@ elif diff < 0:
 else:
     output += "DOCK performed equally well compared to the reference with net " +str(diff)+" system results changed.\n"
 
-output += "("+ str(changed_successes) + " systems improved, " + str(changed_fails) + " systems worsened)\n" 
+output += "("+ str(changed_successes) + " cases improved, " + str(changed_fails) + " cases worsened)\n" 
 
 
 
 # success/fail reporting
-output += "\n#### Success/ScoreFail/SampleFail/SystemError ####\n"
+output += "\n#### Success/ScoreFail/SampleFail/SystemError (ref in parentheses) ####\n"
 result_diff = [0,0,0,0] # success, scoref, samplef, error
 for expt in expt_dict:
     output += expt.ljust(6) + ": "
@@ -232,8 +233,6 @@ output += "\n"
 output += "Change: " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in result_diff) + "\n"
 avg_diff = [z/float(nexpt) for z in result_diff]
 output += "Avg:    " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in avg_diff) + "\n"
-if abs(avg_diff[0]) > 1:
-    output += "On average, at least one system worsened per trial. This may be something to investigate with larger-scale trials.\n"
 
 # comparison to given reference
 output += "\n#### Comparing Behavior to Reference (ref -> this trial) ####\n"
