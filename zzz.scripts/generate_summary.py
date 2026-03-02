@@ -218,16 +218,20 @@ output += "("+ str(changed_successes) + " cases improved, " + str(changed_fails)
 
 
 # success/fail reporting
-output += "\n#### Success/ScoreFail/SampleFail/SystemError (ref in parentheses) ####\n"
+output += "\n#### Success/ScoreFail/SampleFail/SystemError/%Success (ref in parentheses) ####\n"
 result_diff = [0,0,0,0] # success, scoref, samplef, error
 for expt in expt_dict:
     output += expt.ljust(6) + ": "
+    tot_expt_sys = sum(expt_dict[expt])
+    if expt in ref_expts: tot_ref_sys = sum(int(x) for x in ref_expt_num_dict[expt])
     for i in range(4):
         if expt in ref_expts:
             output += "".join([str(expt_dict[expt][i]), "(", ref_expt_num_dict[expt][i], ")"]).rjust(8) + ", "
             result_diff[i] += (expt_dict[expt][i] - int(ref_expt_num_dict[expt][i]))
         else: 
             output += "".join([str(expt_dict[expt][i]), "( )"]).rjust(8) + ", "
+    if expt in ref_expts: output += "".join([str(round(expt_dict[expt][0]/tot_expt_sys, 3)),"(",
+                                             str(round(int(ref_expt_num_dict[expt][0])/tot_ref_sys, 3)) + ")"]).rjust(10)
     output += "\n"
 output += "\n"
 output += "Change: " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in result_diff) + "\n"
