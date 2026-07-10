@@ -19,8 +19,9 @@ sysdir="${SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 rmsddir="${rootdir}/zzz.rmsds"
+dtmode="DT${DT_MODE}"
 
-rmsd_dump_file="${rootdir}/all_rmsd_dump.txt"
+rmsd_dump_file="${rootdir}/${dtmode}_all_rmsd_dump.txt"
 if [ -s ${rmsd_dump_file} ]; then rm ${rmsd_dump_file}; fi
 touch ${rmsd_dump_file}
 
@@ -42,11 +43,12 @@ while read system; do
 
 done < ${paramdir}/system_list.txt
 
-out_prefix=${rootdir}/DT100
-ref_file=${paramdir}/ref_DT100_Performance_Summary.txt
+out_prefix=${rootdir}/${dtmode}
+ref_file=${paramdir}/ref_${dtmode}_Performance_Summary.txt
 
 echo "Analyzing RMSDs..."
 
 # python3  generate_summary.py                RMSDfile        OutPrefix            ReferenceFile
 python3 ${scriptdir}/generate_summary.py  ${rmsd_dump_file} ${out_prefix} `realpath --relative-to=./ ${ref_file}`
 
+echo "Done! Results dumped to `realpath --relative-to=./ ${out_prefix}_Performance_Summary.txt`. "

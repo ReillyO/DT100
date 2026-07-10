@@ -18,22 +18,23 @@ rootdir=${MAINDIR}
 sysdir=${SYSDIR}
 paramdir="${rootdir}/zzz.parameters/"
 scriptdir="${rootdir}/zzz.scripts"
-DT_URL=${DT100_URL}
+DT_URL=${DT_URL}
+DT_FILE="DT${DT_MODE}.tar.gz"
 
-if [ ! -e ${rootdir}/DT100.tar.gz ]; then 
+if [ ! -e ${rootdir}/${DT_FILE} ]; then 
 	echo -e "\nFetching files (speed may vary depending on internet connection)\n"
-	wget --no-check-certificate --directory-prefix=${rootdir} ${DT_URL} -O DT100.tar.gz
+	wget --no-check-certificate --directory-prefix=${rootdir} ${DT_URL} -O ${DT_FILE}
 else
-	echo -e "\nFound tarball with filename DT100.tar.gz; systems in this file will be used for the DT100 test. If you would like the script to re-download the tarball from the DOCK website, delete the DT100.tar.gz file from this directory and run the script again.\n"
+	echo -e "\nFound tarball with filename ${{DT_FILE}; systems in this file will be used for the DT test. If you would like the script to re-download the tarball from the DOCK website, delete the ${DT_FILE} file from this directory and run the script again.\n"
 fi
 
-if [ ! -s ${rootdir}/DT100.tar.gz ]; then
+if [ ! -s ${rootdir}/${DT_FILE} ]; then
 	echo "Something went wrong with the download. Exiting..."
 	exit 1
 fi
 
 echo -e "Un-tarring files...\n"
-tar -xf DT100.tar.gz --directory ${rootdir}/
+tar -xf ${DT_FILE} --directory ${rootdir}/
 
 if [ -s ${sysdir} ]; then
 	echo -e "Removing old system directory...\n"
@@ -53,20 +54,20 @@ while read system; do
 	mkdir ${sysdir}/${system}/001.files
 	mkdir ${sysdir}/${system}/002.grid_gen
 	mkdir ${sysdir}/${system}/004.analysis
-	cp ${rootdir}/DT100/${system}/${system}.rec.clean.mol2          ${sysdir}/${system}/001.files/  
-	cp ${rootdir}/DT100/${system}/${system}.lig.am1bcc.mol2         ${sysdir}/${system}/001.files/
-	cp ${rootdir}/DT100/${system}/${system}.rec.clust.close.sph     ${sysdir}/${system}/001.files/
-done < ${rootdir}/DT100/params/system_list.txt
+	cp ${rootdir}/${DT_MODE}/${system}/${system}.rec.clean.mol2          ${sysdir}/${system}/001.files/  
+	cp ${rootdir}/${DT_MODE}/${system}/${system}.lig.am1bcc.mol2         ${sysdir}/${system}/001.files/
+	cp ${rootdir}/${DT_MODE}/${system}/${system}.rec.clust.close.sph     ${sysdir}/${system}/001.files/
+done < ${rootdir}/${DT_MODE}/params/system_list.txt
 
 mkdir ${paramdir}
-cp ${rootdir}/DT100/params/* ${paramdir}/
+cp ${rootdir}/${DT_MODE}/params/* ${paramdir}/
 
 
 echo -e "Cleaning up workspace...\n"
 if [ -s ${rootdir}/trash/ ]; then rm -r ${MAINDIR}/trash; fi
 mkdir ${rootdir}/trash
-mv ${rootdir}/DT100/ ${MAINDIR}/trash/
-mv ${rootdir}/DT100.tar.gz ${MAINDIR}/trash
+mv ${rootdir}/${DT_MODE}/ ${MAINDIR}/trash/
+mv ${rootdir}/${DT_FILE} ${MAINDIR}/trash
 
 echo -e "Done!\n"
 echo -e "All system files are located in ./`realpath --relative-to=./ ${sysdir}`\n"
