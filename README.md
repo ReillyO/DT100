@@ -13,6 +13,7 @@ The `run.xxx` files and `zzz.scripts` folder should download automatically to yo
 ## 2) Customize the Scripts
 
 Before running any scripts, open the `run.000.prepare_env.sh` in a text editor and:
+* Change the `DT_MODE` variable to the desired option (100S, 100R, 1244)
 * Change the `MAINDIR` environment variable definition to the desired absolute path
 * Change the `DOCKHOME` variable to an absolute path to a DOCK installation (Note: path should not point to the `bin` folder, but to the folder above it)
 * (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~4GB of storage space)
