@@ -19,7 +19,8 @@ sysdir=${SYSDIR}
 paramdir="${rootdir}/zzz.parameters/"
 scriptdir="${rootdir}/zzz.scripts"
 DT_URL=${DT_URL}
-DT_FILE="DT${DT_MODE}.tar.gz"
+DT_PREF="DT${DT_MODE}"
+DT_FILE="${DT_PREF}.tar.gz"
 
 if [ ! -e ${rootdir}/${DT_FILE} ]; then 
 	echo -e "\nFetching files (speed may vary depending on internet connection)\n"
@@ -54,19 +55,19 @@ while read system; do
 	mkdir ${sysdir}/${system}/001.files
 	mkdir ${sysdir}/${system}/002.grid_gen
 	mkdir ${sysdir}/${system}/004.analysis
-	cp ${rootdir}/${DT_MODE}/${system}/${system}.rec.clean.mol2          ${sysdir}/${system}/001.files/  
-	cp ${rootdir}/${DT_MODE}/${system}/${system}.lig.am1bcc.mol2         ${sysdir}/${system}/001.files/
-	cp ${rootdir}/${DT_MODE}/${system}/${system}.rec.clust.close.sph     ${sysdir}/${system}/001.files/
-done < ${rootdir}/${DT_MODE}/params/system_list.txt
+	cp ${rootdir}/${DT_PREF}/${system}/${system}.rec.clean.mol2          ${sysdir}/${system}/001.files/  
+	cp ${rootdir}/${DT_PREF}/${system}/${system}.lig.am1bcc.mol2         ${sysdir}/${system}/001.files/
+	cp ${rootdir}/${DT_PREF}/${system}/${system}.rec.clust.close.sph     ${sysdir}/${system}/001.files/
+done < ${rootdir}/${DT_PREF}/params/system_list.txt
 
 mkdir ${paramdir}
-cp ${rootdir}/${DT_MODE}/params/* ${paramdir}/
+cp ${rootdir}/${DT_PREF}/params/* ${paramdir}/
 
 
 echo -e "Cleaning up workspace...\n"
 if [ -s ${rootdir}/trash/ ]; then rm -r ${MAINDIR}/trash; fi
 mkdir ${rootdir}/trash
-mv ${rootdir}/${DT_MODE}/ ${MAINDIR}/trash/
+mv ${rootdir}/${DT_PREF}/ ${MAINDIR}/trash/
 mv ${rootdir}/${DT_FILE} ${MAINDIR}/trash
 
 echo -e "Done!\n"

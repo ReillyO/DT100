@@ -11,6 +11,7 @@ rootdir="${MAINDIR}"
 sysdir="${SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
+dtpref="DT${DT_MODE}"
 
 # create list of random seeds (ADD OR EDIT HERE)
 declare -a random_seeds=(1 2 4)

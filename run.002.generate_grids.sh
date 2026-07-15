@@ -24,6 +24,7 @@ rootdir="${MAINDIR}"
 sysdir="${SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
+dtpref="DT${DT_MODE}"
 
 echo "Starting grid generation for all systems..."
 

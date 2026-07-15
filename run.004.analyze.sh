@@ -19,9 +19,9 @@ sysdir="${SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 rmsddir="${rootdir}/zzz.rmsds"
-dtmode="DT${DT_MODE}"
+dtpref="DT${DT_MODE}"
 
-rmsd_dump_file="${rootdir}/${dtmode}_all_rmsd_dump.txt"
+rmsd_dump_file="${rootdir}/${dtpref}_all_rmsd_dump.txt"
 if [ -s ${rmsd_dump_file} ]; then rm ${rmsd_dump_file}; fi
 touch ${rmsd_dump_file}
 
@@ -43,8 +43,8 @@ while read system; do
 
 done < ${paramdir}/system_list.txt
 
-out_prefix=${rootdir}/${dtmode}
-ref_file=${paramdir}/ref_${dtmode}_Performance_Summary.txt
+out_prefix=${rootdir}/${dtpref}
+ref_file=${paramdir}/ref_${dtpref}_Performance_Summary.txt
 
 echo "Analyzing RMSDs..."
 
