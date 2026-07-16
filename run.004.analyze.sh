@@ -19,6 +19,7 @@ sysdir="${SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 rmsddir="${rootdir}/zzz.rmsds"
+anldir="${rootdir}/zzz.analysis"
 dtpref="DT${DT_MODE}"
 
 rmsd_dump_file="${rootdir}/${dtpref}_all_rmsd_dump.txt"
@@ -46,9 +47,18 @@ done < ${paramdir}/system_list.txt
 out_prefix=${rootdir}/${dtpref}
 ref_file=${paramdir}/ref_${dtpref}_Performance_Summary.txt
 
+
 echo "Analyzing RMSDs..."
 
 # python3  generate_summary.py                RMSDfile        OutPrefix            ReferenceFile
 python3 ${scriptdir}/generate_summary.py  ${rmsd_dump_file} ${out_prefix} `realpath --relative-to=./ ${ref_file}`
 
-echo "Done! Results dumped to `realpath --relative-to=./ ${out_prefix}_Performance_Summary.txt`. "
+if [ -s ${anldir} ]; then rm -r ${anldir}; fi
+mkdir ${anldir}
+
+mv ${rmsd_dump_file} ${anldir}
+mv ${rootdir}/${dtpref}_Raw_Data.csv ${anldir}
+mv ${rootdir}/${dtpref}_System_Performance.csv ${anldir}
+
+echo "Done! Above summary printed to `realpath --relative-to=${rootdir} ${out_prefix}_Performance_Summary.txt`."
+echo "Finer-grain data stored in zzz.analysis folder."
