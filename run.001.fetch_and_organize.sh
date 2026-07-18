@@ -26,7 +26,7 @@ if [ ! -e ${rootdir}/${DT_FILE} ]; then
 	echo -e "\nFetching files (speed may vary depending on internet connection)\n"
 	wget --no-check-certificate --directory-prefix=${rootdir} ${DT_URL} -O ${DT_FILE}
 else
-	echo -e "\nFound tarball with filename ${{DT_FILE}; systems in this file will be used for the DT test. If you would like the script to re-download the tarball from the DOCK website, delete the ${DT_FILE} file from this directory and run the script again.\n"
+	echo -e "\nFound tarball with filename ${DT_FILE}; systems in this file will be used for the DT test. If you would like the script to re-download the tarball from the DOCK website, delete the ${DT_FILE} file from this directory and run the script again.\n"
 fi
 
 if [ ! -s ${rootdir}/${DT_FILE} ]; then

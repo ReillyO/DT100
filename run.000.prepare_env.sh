@@ -20,7 +20,7 @@ export MAINDIR="/absolute/path/to/working/directory/"
 
 if [ ! -e ${MAINDIR} ]; then 
 	echo "ERROR: MAINDIR path does not exist! Please correct and try again."
-	unset ${MAINDIR}
+	unset MAINDIR
 fi
 
 # system directory (usually nested in testset directory)
@@ -28,7 +28,7 @@ export SYSDIR="${MAINDIR}/zzz.DT_systems/"
 
 if [ -e ${SYSDIR} ]; then
 	echo "ERROR: SYSDIR path already exists! Please save any important data or delete it before re-trying."
-	unset ${SYSDIR}
+	unset SYSDIR
 else
 	echo "Attempting to create zzz.DT_systems directory in `realpath --relative-to=./ ${MAINDIR}`"
 	mkdir ${SYSDIR} && echo "Successful!"
@@ -39,7 +39,7 @@ export DOCKHOME="/absolute/path/to/DOCK/installation/"
 
 if [ ! -e ${DOCKHOME} ]; then
 	echo "ERROR: DOCKHOME path does not exist! Please correct and try again."
-	unset ${DOCKHOME}
+	unset DOCKHOME
 fi
 
 # URL to download testset from Rizzo lab page
