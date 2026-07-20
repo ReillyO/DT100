@@ -1,5 +1,5 @@
-# DT100
-DOCKTest-100: Testset of 100 protein-ligand systems that give near-100% successful pose reproduction results, for sanity-checking future DOCK changes.
+# DT Test Set Series
+DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 performance.
 
 # Usage
 ## 1) Clone the repository from GitHub
