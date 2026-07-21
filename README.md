@@ -1,6 +1,12 @@
 # DT Test Set Series
 DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 performance.
 
+# Variants
+
+ * DT100R: "Representative" set of systems that generally reproduces DOCK6 re-docking performance on the larger SB2025 test set.
+ * DT100S: "Successful" set of systems that usually generate successes in DOCK6 re-docking; readily interpretable sanity check for new changes.
+ * DT1244: All systems in the SB2025 test set; more computationally intensive but more thorough picture of current DOCK6 performance.
+
 # Usage
 ## 1) Clone the repository from GitHub
 
