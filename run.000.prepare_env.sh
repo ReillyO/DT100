@@ -27,7 +27,7 @@ fi
 export SYSDIR="${MAINDIR}/zzz.DT_systems/"
 
 if [ -e ${SYSDIR} ]; then
-	echo "ERROR: SYSDIR path already exists! Please save any important data or delete it before re-trying."
+	echo "ERROR: SYSDIR path already exists! Please save any important data or delete it before re-trying. SYSDIR path will not be set."
 	unset SYSDIR
 else
 	echo "Attempting to create zzz.DT_systems directory in `realpath --relative-to=./ ${MAINDIR}`"
@@ -38,7 +38,7 @@ fi
 export DOCKHOME="/absolute/path/to/DOCK/installation/"
 
 if [ ! -e ${DOCKHOME} ]; then
-	echo "ERROR: DOCKHOME path does not exist! Please correct and try again."
+	echo "ERROR: DOCKHOME path does not exist! Please correct and try again. DOCKHOME path will not be set."
 	unset DOCKHOME
 fi
 
@@ -50,7 +50,7 @@ elif [ ${DT_MODE} = "100R" ]; then
 elif [ ${DT_MODE} = "1244" ]; then 
 	export DT_URL="https://ringo.ams.stonybrook.edu/downloads/DT/DT1244.tar.gz"
 else
-	echo "ERROR: Unrecognized DT_MODE setting! Download URL not set. Please edit the DT_MODE value in run.000.prepare_env.sh before trying again."
+	echo "ERROR: Unrecognized DT_MODE setting! Download URL will not be set. Please edit the DT_MODE value in run.000.prepare_env.sh before trying again."
 fi
 
 echo "Environment setup script complete for DT${DT_MODE}. Correct any errors if noted."
