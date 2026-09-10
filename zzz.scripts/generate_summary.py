@@ -235,7 +235,7 @@ for expt in expt_dict:
     output += "\n"
 output += "\n"
 output += "Change: " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in result_diff) + "\n"
-avg_diff = [z/float(nexpt) for z in result_diff]
+avg_diff = [round(z/float(nexpt), 3) for z in result_diff]
 output += "Avg:    " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in avg_diff) + "\n"
 
 # comparison to given reference
