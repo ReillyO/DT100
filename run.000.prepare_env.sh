@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Environment variables should be set according to user's environment
-# For instance, set MAINDIR to the filepath that the testset will be located
+# For instance, set DT_MAINDIR to the filepath that the testset will be located
 # in so that the absolute path can be referenced by the other scripts. 
 
 # THIS SHOULD BE RUN USING source ./run.000.prepare_env 
@@ -16,30 +16,30 @@
 export DT_MODE="100S"
 
 # testset directory
-export MAINDIR="/absolute/path/to/working/directory/"
+export DT_MAINDIR="/absolute/path/to/working/directory/"
 
-if [ ! -e ${MAINDIR} ]; then 
-	echo "ERROR: MAINDIR path does not exist! Please correct and try again."
-	unset MAINDIR
+if [ ! -e ${DT_MAINDIR} ]; then 
+	echo "ERROR: DT_MAINDIR path does not exist! Please correct and try again."
+	unset DT_MAINDIR
 fi
 
 # system directory (usually nested in testset directory)
-export SYSDIR="${MAINDIR}/zzz.DT_systems/"
+export DT_SYSDIR="${DT_MAINDIR}/zzz.DT_systems/"
 
-if [ -e ${SYSDIR} ]; then
-	echo "ERROR: SYSDIR path already exists! Please save any important data or delete it before re-trying."
-	unset SYSDIR
+if [ -e ${DT_SYSDIR} ]; then
+	echo "ERROR: DT_SYSDIR path already exists! Please save any important data or delete it before re-trying."
+	unset DT_SYSDIR
 else
-	echo "Attempting to create zzz.DT_systems directory in `realpath --relative-to=./ ${MAINDIR}`"
-	mkdir ${SYSDIR} && echo "Successful!"
+	echo "Attempting to create zzz.DT_systems directory in `realpath --relative-to=./ ${DT_MAINDIR}`"
+	mkdir ${DT_SYSDIR} && echo "Successful!"
 fi
 
 # path to DOCK6 folder (NOT the bin folder)
-export DOCKHOME="/absolute/path/to/DOCK/installation/"
+export DT_DOCKHOME="/absolute/path/to/DOCK/installation/"
 
-if [ ! -e ${DOCKHOME} ]; then
-	echo "ERROR: DOCKHOME path does not exist! Please correct and try again."
-	unset DOCKHOME
+if [ ! -e ${DT_DOCKHOME} ]; then
+	echo "ERROR: DT_DOCKHOME path does not exist! Please correct and try again."
+	unset DT_DOCKHOME
 fi
 
 # URL to download testset from Rizzo lab page
@@ -52,5 +52,9 @@ elif [ ${DT_MODE} = "1244" ]; then
 else
 	echo "ERROR: Unrecognized DT_MODE setting! Download URL not set. Please edit the DT_MODE value in run.000.prepare_env.sh before trying again."
 fi
+
+# computing
+# retain the `nproc` result or enter a custom number
+export DT_NPROC="`nproc`"
 
 echo "Environment setup script complete for DT${DT_MODE}. Correct any errors if noted."

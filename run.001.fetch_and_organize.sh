@@ -14,11 +14,10 @@
 # bash run.001.fetch_and_organize
 
 
-rootdir=${MAINDIR}
-sysdir=${SYSDIR}
+rootdir=${DT_MAINDIR}
+sysdir=${DT_SYSDIR}
 paramdir="${rootdir}/zzz.parameters/"
 scriptdir="${rootdir}/zzz.scripts"
-DT_URL=${DT_URL}
 DT_PREF="DT${DT_MODE}"
 DT_FILE="${DT_PREF}.tar.gz"
 

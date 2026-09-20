@@ -26,6 +26,10 @@ paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 dtpref="DT${DT_MODE}"
 
+# Set counter for batching
+
+nrun=1
+
 echo "Starting grid generation for all systems..."
 
 while read system; do 
@@ -108,6 +112,14 @@ EOF
 	#rm -f ./${system}.rec.clust.close.sph 
 	
 	cd ${sysdir}
+
+	# Batch based on number of processors
+	if ((nrun % DT_NPROC == 0)); then
+		echo "batch $((nrun%DT_NPROC))"
+		wait
+	fi
+
+	nrun=$((nrun+1))
 
 done < ${paramdir}/system_list.txt	
 

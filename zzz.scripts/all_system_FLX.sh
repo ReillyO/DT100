@@ -23,6 +23,9 @@ scriptdir="${rootdir}/zzz.scripts"
 label=${1}
 seed=${2}
 
+# Set counter for batching
+nrun=1
+
 # loop reads systems from system_list.txt in parameters
 while read system; do
 	# move to system directory and copy in pertinent files
@@ -117,6 +120,14 @@ EOF
 	${dockdir}/dock6 -i flex.in -o flex.out &	
 	
 	cd ${sysdir}
+
+	# Batch jobs based on number of processors
+	if ((nrun % DT_NPROC == 0)); then
+		echo "batch $((nrun % DT_NPROC))" 
+		wait
+	fi
+
+	nrun=$((nrun+1))
 
 done < ${paramdir}/system_list.txt
 
