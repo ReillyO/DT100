@@ -56,5 +56,6 @@ fi
 # computing
 # retain the `nproc` result or enter a custom number
 export DT_NPROC="`nproc`"
+echo "Detected ${DT_NPROC} processors in the current environment! Computing resources will be budgeted to reflect this. This can be changed via the DT_NPROC variable in run.000.prepare_env.sh."
 
 echo "Environment setup script complete for DT${DT_MODE}. Correct any errors if noted."
