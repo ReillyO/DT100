@@ -29,6 +29,7 @@ touch ${rmsd_dump_file}
 echo "Collecting RMSDs..."
 
 while read system; do
+	if [ ! -s "${sysdir}/${system}/004.analysis/" ]; then mkdir "${sysdir}/${system}/004.analysis/"; fi
 	rawfile="${sysdir}/${system}/004.analysis/system_rmsds.txt"
 	cd ${sysdir}/${system}
 	if [ -s ${rawfile} ]; then rm ${rawfile}; fi

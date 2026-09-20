@@ -1,5 +1,11 @@
-# DT100
-DOCKTest-100: Testset of 100 protein-ligand systems that give near-100% successful pose reproduction results, for sanity-checking future DOCK changes.
+# DT Test Set Series
+DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 performance.
+
+# Variants
+
+ * DT100R: "Representative" set of systems that generally reproduces DOCK6 re-docking performance on the larger SB2025 test set.
+ * DT100S: "Successful" set of systems that usually generate successes in DOCK6 re-docking; readily interpretable sanity check for new changes.
+ * DT1244: All systems in the SB2025 test set; more computationally intensive but more thorough picture of current DOCK6 performance.
 
 # Usage
 ## 1) Clone the repository from GitHub
@@ -63,7 +69,7 @@ The new system should now be recognized and integrated into the benchmark the ne
 
 ## Adding Tests
 
-New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference file contained in DT100.tar.gz at time of writing contains data on random seeds 1 thru 10, so any of these can be added if additional data is desired.
+New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT .tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
 
 
 
