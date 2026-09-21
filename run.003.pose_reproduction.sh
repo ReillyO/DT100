@@ -6,9 +6,9 @@
 # assumes steps 000, 001, and 002 have already run successfully
 
 # set some paths
-dockdir="${DOCKHOME}/bin/"
-rootdir="${MAINDIR}"
-sysdir="${SYSDIR}"
+dockdir="${DT_DOCKHOME}/bin/"
+rootdir="${DT_MAINDIR}"
+sysdir="${DT_SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 dtpref="DT${DT_MODE}"

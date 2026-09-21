@@ -64,10 +64,10 @@ cp ${rootdir}/${DT_PREF}/params/* ${paramdir}/
 
 
 echo -e "Cleaning up workspace...\n"
-if [ -s ${rootdir}/trash/ ]; then rm -r ${MAINDIR}/trash; fi
+if [ -s ${rootdir}/trash/ ]; then rm -r ${rootdir}/trash; fi
 mkdir ${rootdir}/trash
-mv ${rootdir}/${DT_PREF}/ ${MAINDIR}/trash/
-mv ${rootdir}/${DT_FILE} ${MAINDIR}/trash
+mv ${rootdir}/${DT_PREF}/ ${rootdir}/trash/
+mv ${rootdir}/${DT_FILE} ${rootdir}/trash
 
 echo -e "Done!\n"
 echo -e "All system files are located in ./`realpath --relative-to=./ ${sysdir}`\n"

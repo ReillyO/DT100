@@ -26,9 +26,9 @@ fi
 # system directory (usually nested in testset directory)
 export DT_SYSDIR="${DT_MAINDIR}/zzz.DT_systems/"
 
-if [ -e ${SYSDIR} ]; then
+if [ -e ${DT_SYSDIR} ]; then
 	echo "ERROR: SYSDIR path already exists! Please save any important data or delete it before re-trying. SYSDIR path will not be set."
-	unset SYSDIR
+	unset DT_SYSDIR
 else
 	echo "Attempting to create zzz.DT_systems directory in `realpath --relative-to=./ ${DT_MAINDIR}`"
 	mkdir ${DT_SYSDIR} && echo "Successful!"

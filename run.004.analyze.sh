@@ -13,9 +13,9 @@
 # (script will note if any systems appear to have suffered errors)
 
 # set some paths
-dockdir="${DOCKHOME}/bin/"
-rootdir="${MAINDIR}"
-sysdir="${SYSDIR}"
+dockdir="${DT_DOCKHOME}/bin/"
+rootdir="${DT_MAINDIR}"
+sysdir="${DT_SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 rmsddir="${rootdir}/zzz.rmsds"

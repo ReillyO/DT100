@@ -19,9 +19,9 @@ maxkeep="75"
 
 
 ### Set some paths
-dockdir="${DOCKHOME}/bin/"
-rootdir="${MAINDIR}"
-sysdir="${SYSDIR}"
+dockdir="${DT_DOCKHOME}/bin/"
+rootdir="${DT_MAINDIR}"
+sysdir="${DT_SYSDIR}"
 paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 dtpref="DT${DT_MODE}"
@@ -115,7 +115,7 @@ EOF
 
 	# Batch based on number of processors
 	if ((nrun % DT_NPROC == 0)); then
-		echo "batch $((nrun%DT_NPROC))"
+		echo "batch $((nrun/DT_NPROC))"
 		wait
 	fi
 
