@@ -28,6 +28,7 @@ export DT_SYSDIR="${DT_MAINDIR}/zzz.DT_systems/"
 
 if [ -e ${DT_SYSDIR} ]; then
 	echo "ERROR: SYSDIR path already exists! Please save any important data or delete it before re-trying. SYSDIR path will not be set."
+        echo "If you would like to remove it, run zzz.scripts/clean.sh to clean the workspace"
 	unset DT_SYSDIR
 else
 	echo "Attempting to create zzz.DT_systems directory in `realpath --relative-to=./ ${DT_MAINDIR}`"
