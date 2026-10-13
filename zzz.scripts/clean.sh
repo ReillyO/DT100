@@ -5,8 +5,8 @@
 #  - zzz.DT_systems folder entirely
 #  - zzz.analysis folder entirely
 #  - any _Performance_Summary.txt file
-#  - the DT100.out file from batch script if present
-#  - the DT1244.tar.gz file if present
+#  - the DT*.out file from batch script if present
+#  - the DT*.tar.gz file if present
 
 ### Set some paths
 dockdir="${DT_DOCKHOME}/bin/"
