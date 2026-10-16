@@ -22,6 +22,7 @@ Before running any scripts, open the `run.000.prepare_env.sh` in a text editor a
 * Change the `DT_MODE` variable to the desired option (100S, 100R, 1244)
 * Change the `MAINDIR` environment variable definition to the desired absolute path
 * Change the `DOCKHOME` variable to an absolute path to a DOCK installation (Note: path should not point to the `bin` folder, but to the folder above it)
+* Change the `DT_SEEDS` variable to the desired random seeds for the run (by default, runs seeds 1 2 4). 
 * (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~4GB of storage space for the 100-system modes, and ~45GB of space for the 1244 mode)
 
 The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.003.pose_reproduction.sh`. More detail on this is provided in Modifications.
@@ -69,7 +70,7 @@ The new system should now be recognized and integrated into the benchmark the ne
 
 ## Adding Tests
 
-New simplex random seed tests can be created by opening the `run.003.pose_reproduction.sh` script in a text editor and adding new values to the `random_seeds` array definition. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT .tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
+New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` array definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT .tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
 
 
 

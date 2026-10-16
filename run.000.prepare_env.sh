@@ -54,7 +54,9 @@ else
 	echo "ERROR: Unrecognized DT_MODE setting! Download URL will not be set. Please edit the DT_MODE value in run.000.prepare_env.sh before trying again."
 fi
 
-# computing
+# Random seeds to be run
+export DT_SEEDS="1 2 4"
+
 # retain the `nproc` result or enter a custom number
 export DT_NPROC="`nproc`"
 echo "Detected ${DT_NPROC} processors in the current environment! Computing resources will be budgeted to reflect this. This can be changed via the DT_NPROC variable in run.000.prepare_env.sh."

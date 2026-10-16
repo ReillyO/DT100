@@ -13,8 +13,7 @@ paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 dtpref="DT${DT_MODE}"
 
-# create list of random seeds (ADD OR EDIT HERE)
-declare -a random_seeds=(1 2 4)
+random_seeds=${DT_SEEDS}
 
 echo "Beginning DOCKing run for all systems with seeds ${random_seeds[*]}"
 
