@@ -72,5 +72,7 @@ The new system should now be recognized and integrated into the benchmark the ne
 
 New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` array definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT .tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
 
+## Citation
 
+If you use this test suite, please cite "Pose Reproduction, Cross Docking, Database Enrichment, and Reverse Docking Benchmarks for DOCK6, Vina, and AutoDock 4 with Emphasis on Approved Drugs" published in JCIM by Corbo et al., from which the systems and broad preparation protocols were derived.
 
