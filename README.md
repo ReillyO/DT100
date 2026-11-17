@@ -3,9 +3,17 @@ DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 p
 
 # Variants
 
- * DT100R: "Representative" set of systems that generally reproduces DOCK6 re-docking performance on the larger SB2025 test set.
- * DT100S: "Successful" set of systems that usually generate successes in DOCK6 re-docking; readily interpretable sanity check for new changes.
- * DT1244: All systems in the SB2025 test set; more computationally intensive but more thorough picture of current DOCK6 performance.
+## System Collections
+
+ * 100R: "Representative" set of systems that generally reproduces DOCK6 re-docking performance on the larger SB2025 test set.
+ * 100S: "Successful" set of systems that usually generate successes in DOCK6 re-docking; readily interpretable sanity check for new changes.
+ * 1244: All systems in the SB2025 test set; more computationally intensive but more thorough picture of current DOCK6 performance.
+
+## Tests
+
+ * FDPR: Flexible Docking Pose Reproduction - re-docks the ligand of each system to its receptor and checks accuracy
+ * FLDN: Focused Library De Novo - generates a fragment library from the system ligand, then attempts to reconstruct it
+ * FLGA: Focused Library Genetic Algorithm - shuffles the original ligand via 10 rounds of roulette, then attempts to reconstruct it with 10 rounds of elitism
 
 # Usage
 ## 1) Clone the repository from GitHub
@@ -19,11 +27,13 @@ The `run.xxx` files and `zzz.scripts` folder should download automatically to yo
 ## 2) Customize the Scripts
 
 Before running any scripts, open the `run.000.prepare_env.sh` in a text editor and:
-* Change the `DT_MODE` variable to the desired option (100S, 100R, 1244)
+* Change the `DT_SYS` variable to the desired option (100S, 100R, 1244)
+* Change the `DT_MODE` variable to the desired option (FDPR, FLDN, FLGA)
 * Change the `MAINDIR` environment variable definition to the desired absolute path
 * Change the `DOCKHOME` variable to an absolute path to a DOCK installation (Note: path should not point to the `bin` folder, but to the folder above it)
 * (optional) Change the `DT_SEEDS` variable to the desired random seeds for the run (by default, runs seeds 1 2 4). 
 * (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~4GB of storage space for the 100-system modes, and ~45GB of space for the 1244 mode)
+* (optional) Change the `DT_NPROC` environment variable to reflect the number of processors that DockTest should attempt to use.
 
 The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.003.pose_reproduction.sh`. More detail on this is provided in Modifications.
 
