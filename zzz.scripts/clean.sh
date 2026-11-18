@@ -1,12 +1,11 @@
 #!/bin/bash
 
-# Script to clean up the main directory. Will remove:
-#  - the trash folder if present
+# Script to clean up the main directory. Will ask if the user wishes to remove:
 #  - zzz.DT_systems folder entirely
+#  - All experimental results (003 directories)
 #  - zzz.analysis folder entirely
 #  - any _Performance_Summary.txt file
-#  - the DT*.out file from batch script if present
-#  - the DT*.tar.gz file if present
+#  - the DT*.tar.gz file(s) if present
 
 ### Set some paths
 dockdir="${DT_DOCKHOME}/bin/"
@@ -16,38 +15,58 @@ paramdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 dtpref="DT${DT_MODE}"
 
+echo "CLEANING SCRIPT"
+echo "Indicate if each directory/file should be deleted. Any input other than 'y' will skip the removal."
 
 if [ -s ${rootdir}/zzz.DT_systems ]; then
-    echo "Removing extant zzz.DT_systems directory"
-    rm -rf ${rootdir}/zzz.DT_systems
+    echo "Delete current DT_SYSDIR (`realpath --relative-to=./ ${rootdir}/zzz.DT_systems`)?"
+    echo -n "y/N:"
+    read rem
+    if [ "${rem}" = "y" ]; then
+	echo "Removing..."
+	rm -rf ${rootdir}/zzz.DT_systems
+    fi
 fi
 
+if [ -s ${rootdir}/zzz.DT_systems ]; then
+    echo "Delete any extant 003 directories (clear experimental data while preserving grids)?"
+    echo -n "y/N:"
+    read rem
+    if [ "${rem}" = "y" ]; then
+        echo "Removing..."
+        rm -rf ${rootdir}/zzz.DT_systems/*/003*
+    fi
+fi
 
 if [ -s ${rootdir}/zzz.analysis ]; then
-    echo "Removing extant zzz.analysis directory"
-    rm -rf ${rootdir}/zzz.analysis
+    echo "Delete current Analysis directory (`realpath --relative-to=./ ${rootdir}/zzz.analysis`)?"
+    echo -n "y/N:"
+    read rem
+    if [ "${rem}" = "y" ]; then
+	echo "Removing..."
+ 	rm -rf ${rootdir}/zzz.analysis
+    fi
 fi
 
+exit
 
 if [ -s ${rootdir}/*Performance_Summary.txt ]; then
-    echo "Removing extant performance summary file"
-    rm -rf ${rootdir}/*Performance_Summary.txt
+    echo "Delete extant Performance_Summarys and output (`realpath --relative-to=./ ${rootdir}/zzz.analysis`)?"
+    echo -n "y/N:"
+    read rem
+    if [ "${rem}" = "y" ]; then
+	echo "Removing..."
+ 	rm -rf ${rootdir}/*Performance_Summary.tx
+        rm -rf ${rootdir}/DT100.out
+    fi
 fi
-
-
-if [ -s ${rootdir}/DT100.out ]; then
-    echo "Removing extant performance summary file"
-    rm -rf ${rootdir}/DT100.out
-fi
-
-
-if [ -s ${rootdir}/trash ]; then
-    echo "Removing extant trash directory"
-    rm -rf ${rootdir}/trash
-fi 
-
 
 if [ -s ${rootdir}/DT*.tar.gz ]; then
-    echo "Removing extant tarball file"
-    rm ${rootdir}/DT*.tar.gz
+echo "Delete extant system tarball(s) (`realpath --relative-to=./ ${rootdir}/DT*.tar.gz`)?"
+    echo -n "y/N:"
+    read rem
+    if [ "${rem}" = "y" ]; then
+        echo "Removing..."
+        rm -rf ${rootdir}/DT*.tar.gz
+    fi
 fi

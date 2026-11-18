@@ -24,8 +24,8 @@ def aworsethanb(perf1, perf2):
 # check arguments
 try:
     in_file = sys.argv[1]
-    out_prefix = sys.argv[2]
-    ref_file = sys.argv[3]
+    ref_file = sys.argv[2]
+    out_prefix = sys.argv[3]
 except:
     print("Syntax: python generate_summary.py $in_file $outprefix $reference")
 
@@ -198,76 +198,120 @@ for expt in expt_perf_dict.keys():
     if expt not in ref_expts:
         non_ref_expts.append(expt)
 
+output = []
 
-output =  "#######################################################\n"
-output += "#             DT100 Performance Summary               #\n"
-output += "#######################################################\n\n"
-nsys = str(len(sys_perf_dict.keys()))
-nexpt = str(len(expt_perf_dict.keys()))
-output += "Test performed on " + nsys + " systems with " + nexpt + " different seeds/conditions.\n"
-diff = changed_successes - changed_fails
-if diff > 0:
-    output += "DOCK performed better than the reference with net " +str(diff)+" previous failures now successes.\n"
-elif diff < 0:
-    output += "DOCK performed worse than the reference with net " +str(abs(diff))+" previous successes now failures.\n"
-else:
-    output += "DOCK performed equally well compared to the reference with net " +str(diff)+" system results changed.\n"
+if out_prefix != "GENERATE_REFERENCE":
+	output.append("#######################################################")
+	output.append("#             DT100 Performance Summary               #")
+	output.append("#######################################################")
+	output.append("")
+	nsys = str(len(sys_perf_dict.keys()))
+	nexpt = str(len(expt_perf_dict.keys()))
+	output.append("Test performed on " + nsys + " systems with " + nexpt + " different seeds/conditions.")
+	diff = changed_successes - changed_fails
+	if diff > 0:
+	    output.append("DOCK performed BETTER than the reference with net " +str(diff)+" previous failures now successes.")
+	elif diff < 0:
+	    output.append("DOCK performed WORSE than the reference with net " +str(abs(diff))+" previous successes now failures.")
+	else:
+	    output.append("DOCK performed EQUALLY well compared to the reference with net " +str(diff)+" system results changed.")
+	
+	output.append("Improved: +" + str(changed_successes))
+	output.append("Worsened: -" + str(changed_fails))
+	d = changed_successes - changed_fails
+	output.append(f"Net:      {'-' if d < 0 else '+'}{d}")
+	
+	
+	
+	# success/fail reporting
+	output.append("\n#### Success/ScoreFail/SampleFail/SystemError/%Success (ref in parentheses) ####\n")
+	result_diff = [0,0,0,0] # success, scoref, samplef, error
+	for expt in expt_dict:
+	    to_add = ""
+	    to_add += expt.ljust(6) + ": "
+	    tot_expt_sys = sum(expt_dict[expt])
+	    if expt in ref_expts: tot_ref_sys = sum(int(x) for x in ref_expt_num_dict[expt])
+	    for i in range(4):
+	        if expt in ref_expts:
+	            to_add += "".join([str(expt_dict[expt][i]), "(", ref_expt_num_dict[expt][i], ")"]).rjust(8) + ", "
+	            result_diff[i] += (expt_dict[expt][i] - int(ref_expt_num_dict[expt][i]))
+	        else: 
+	            to_add += "".join([str(expt_dict[expt][i]), "( )"]).rjust(8) + ", "
+	    if expt in ref_expts: to_add += "".join([str(round(expt_dict[expt][0]/tot_expt_sys, 3)),"(",
+	                                                 str(round(int(ref_expt_num_dict[expt][0])/tot_ref_sys, 3)) + ")"]).rjust(10) + "\n"
+	    output.append(to_add)
+	output.append("")
+	output.append("Change: " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in result_diff))
+	avg_diff = [round(z/float(nexpt), 3) for z in result_diff]
+	output.append("Avg:    " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in avg_diff))
+	
+	print("\n".join(output))
+	
+	# comparison to given reference
+	output.append("")
+	output.append("#### Comparing Behavior to Reference (ref -> this trial) ####")
+	
+	# warnings for experiments not in reference
+	if len(non_ref_expts) > 0:
+	    output.append("WARNING: case(s) " + str(non_ref_expts) + " could not be compared to given reference!")
+	    output.append("    This means " + str(not_in_ref_count) + " systems experiencing errors could not be compared.")
+	    output.append("    The failures are still reported below in DOCK Failures.")
+	    output.append("    (usually this means you are running a random seed not present in the reference file)")
+	
+	if ref_untested_count > 0:
+	    output.append("NOTE: there are " + str(ref_untested_count) + " fail cases in the reference that were not tested in the current run.")
+	
+	if changed_fails == 0:
+	    output.append("Perfect agreement with cases present in reference file " + ref_file)
+	else:
+	    for case in sorted(fail_mismatches.keys()):
+	        output.append(case + ": " + fail_mismatches[case])
+	
+	# test-specific failures
+	output.append("\n#### DOCK Failures In This Trial ####")
+	for case in sorted(case_perf_dict.keys()):
+	    if case_perf_dict[case] != "Success":
+	        output.append(case + ": " + case_perf_dict[case])
+	
+	human_summary_file = out_prefix + "_Performance_Summary.txt"
+	with open(human_summary_file, 'w') as f:
+	    f.write("\n".join(output))
 
-output += "("+ str(changed_successes) + " cases improved, " + str(changed_fails) + " cases worsened)\n" 
+else: # generating a reference file
+    print(f"NOTE: generating reference file. Will be stored in ref_FDPR_Performance_Summary.txt") 
+	
+    output.append("#######################################################")
+    output.append("#             DT100 Performance Summary               #")
+    output.append("#######################################################")
+    output.append("")
+    nsys = str(len(sys_perf_dict.keys()))
+    nexpt = str(len(expt_perf_dict.keys()))
+    output.append("Test performed on " + nsys + " systems with " + nexpt + " different seeds/conditions.")
 
+    # success/fail reporting
+    output.append("\n#### Success/ScoreFail/SampleFail/SystemError/%Success (ref in parentheses) ####\n")
+    result_diff = [0,0,0,0] # success, scoref, samplef, error
+    for expt in expt_dict:
+        to_add = ""
+        to_add += expt.ljust(6) + ": "
+        tot_expt_sys = sum(expt_dict[expt])
+        if expt in ref_expts: tot_ref_sys = sum(int(x) for x in ref_expt_num_dict[expt])
+        for i in range(4):
+            if expt in ref_expts:
+                to_add += "".join([str(expt_dict[expt][i]), "(", ref_expt_num_dict[expt][i], ")"]).rjust(8) + ", "
+                result_diff[i] += (expt_dict[expt][i] - int(ref_expt_num_dict[expt][i]))
+            else:
+                to_add += "".join([str(expt_dict[expt][i]), "( )"]).rjust(8) + ", "
+        if expt in ref_expts: to_add += "".join([str(round(expt_dict[expt][0]/tot_expt_sys, 3)),"(",
+                                                     str(round(int(ref_expt_num_dict[expt][0])/tot_ref_sys, 3)) + ")"]).rjust(10) + "\n"
+        output.append(to_add)
 
+    # test-specific failures
+    output.append("\n#### DOCK Failures In This Trial ####")
+    for case in sorted(case_perf_dict.keys()):
+        if case_perf_dict[case] != "Success":
+            output.append(case + ": " + case_perf_dict[case])
 
-# success/fail reporting
-output += "\n#### Success/ScoreFail/SampleFail/SystemError/%Success (ref in parentheses) ####\n"
-result_diff = [0,0,0,0] # success, scoref, samplef, error
-for expt in expt_dict:
-    output += expt.ljust(6) + ": "
-    tot_expt_sys = sum(expt_dict[expt])
-    if expt in ref_expts: tot_ref_sys = sum(int(x) for x in ref_expt_num_dict[expt])
-    for i in range(4):
-        if expt in ref_expts:
-            output += "".join([str(expt_dict[expt][i]), "(", ref_expt_num_dict[expt][i], ")"]).rjust(8) + ", "
-            result_diff[i] += (expt_dict[expt][i] - int(ref_expt_num_dict[expt][i]))
-        else: 
-            output += "".join([str(expt_dict[expt][i]), "( )"]).rjust(8) + ", "
-    if expt in ref_expts: output += "".join([str(round(expt_dict[expt][0]/tot_expt_sys, 3)),"(",
-                                             str(round(int(ref_expt_num_dict[expt][0])/tot_ref_sys, 3)) + ")"]).rjust(10)
-    output += "\n"
-output += "\n"
-output += "Change: " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in result_diff) + "\n"
-avg_diff = [round(z/float(nexpt), 3) for z in result_diff]
-output += "Avg:    " + ", ".join(str(x if x <= 0 else "+"+str(x)).rjust(8) for x in avg_diff) + "\n"
-
-# comparison to given reference
-output += "\n#### Comparing Behavior to Reference (ref -> this trial) ####\n"
-
-# warnings for experiments not in reference
-if len(non_ref_expts) > 0:
-    output += "WARNING: case(s) " + str(non_ref_expts) + " could not be compared to given reference!\n"
-    output += "    This means " + str(not_in_ref_count) + " systems experiencing errors could not be compared.\n"
-    output += "    The failures are still reported below in DOCK Failures.\n"
-    output += "    (usually this means you are running a random seed not present in the reference file)\n"
-
-if ref_untested_count > 0:
-    output += "NOTE: there are " + str(ref_untested_count) + " fail cases in the reference that were not tested in the current run.\n"
-
-if changed_fails == 0:
-    output += "Perfect agreement with cases present in reference file " + ref_file + "\n"
-else:
-    for case in sorted(fail_mismatches.keys()):
-        output += case + ": " + fail_mismatches[case] + "\n"
-
-
-# test-specific failures
-output += "\n#### DOCK Failures In This Trial ####\n"
-for case in sorted(case_perf_dict.keys()):
-    if case_perf_dict[case] != "Success":
-        output += case + ": " + case_perf_dict[case] + "\n"
-
-human_summary_file = out_prefix + "_Performance_Summary.txt"
-with open(human_summary_file, 'w') as f:
-    f.write(output)
-
-print(output)
-
-
+    with open("ref_FDPR_Performance_Summary.txt", 'w') as f:
+        f.write("\n".join(output))
+	

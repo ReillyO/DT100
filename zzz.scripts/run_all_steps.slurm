@@ -1,10 +1,10 @@
 #!/bin/bash
 #SBATCH --time=48:00:00
-#SBATCH --nodes=1
-#SBATCH --ntasks=$NUM_CORES
-#SBATCH --job-name=DT100
-#SBATCH --output=DT100.out
-#SBATCH -p $QUEUE_NAME
+#SBATCH --nodes=INSERT_N_NODES
+#SBATCH --ntasks=INSERT_N_TASKS
+#SBATCH --job-name=DT
+#SBATCH --output=DT.out
+#SBATCH -p INSERT_QUEUE_NAME
 
 # Script for Slurm-based computing nodes for the full DT100 benchmark
 
@@ -26,7 +26,7 @@ wait
 echo `date`
 
 # dock all ligands
-bash run.003.pose_reproduction.sh
+bash run.003.experiments.sh
 wait
 
 echo `date`

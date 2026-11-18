@@ -19,16 +19,23 @@ maxkeep="75"
 
 
 ### Set some paths
-dockdir="${DT_DOCKHOME}/bin/"
+dockbin="${DT_DOCKHOME}/bin/"
+dockparamdir="${DT_DOCKHOME}/parameters/"
 rootdir="${DT_MAINDIR}"
 sysdir="${DT_SYSDIR}"
-paramdir="${rootdir}/zzz.parameters"
+dtparamdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
-dtpref="DT${DT_MODE}"
 
 # Set counter for batching
-
 nrun=1
+
+# Check to see if grid generation is necessary by counting number of
+# complete grids (.bmps) and number of systems
+if [ `ls ${sysdir}/????/002.grid_gen/????.rec.bmp | wc -l` = `ls -d ${sysdir}/*/ | wc -l` ]; then 
+	echo "ERROR: Grids are already present! Please use zzz.scripts/clean.sh to clear them if you wish to re-calculate.";
+	echo "Exiting grid generation."
+	exit
+fi
 
 echo "Starting grid generation for all systems..."
 
@@ -60,8 +67,8 @@ while read system; do
 	cp ${sysdir}/${system}/001.files/${system}.rec.clust.close.sph ./
 	
 	# Parameter files	
-	cp ${paramdir}/vdw_AMBER_parm99.defn ./vdw.defn
-	cp ${paramdir}/chem.defn ./chem.defn
+	cp ${dockparamdir}/vdw_AMBER_parm99.defn ./vdw.defn
+	cp ${dockparamdir}/chem.defn ./chem.defn
 	
 	
 	### Construct box.pdb centered on spheres
@@ -76,7 +83,7 @@ box.pdb
 EOF
 	##################################################
 	# command:
-	${dockdir}/showbox < box.in > v.002.txt
+	${dockbin}/showbox < box.in > v.002.txt
 	
 	
 	### Construct grid using receptor mol2 file and generated box
@@ -106,10 +113,10 @@ score_grid_prefix              ./${system}.rec
 EOF
 	##################################################
 	# command:
-	${dockdir}/grid -v -i grid.in -o grid.out & 
+	${dockbin}/grid -v -i grid.in -o grid.out & 
 	
-	#rm -f ./${system}.rec.clean.mol2 
-	#rm -f ./${system}.rec.clust.close.sph 
+	rm -f ./${system}.rec.clean.mol2 
+	rm -f ./${system}.rec.clust.close.sph 
 	
 	cd ${sysdir}
 
@@ -121,7 +128,7 @@ EOF
 
 	nrun=$((nrun+1))
 
-done < ${paramdir}/system_list.txt	
+done < ${dtparamdir}/system_list.txt	
 
 # ensure all grid processes finish before terminating script
 wait
@@ -132,6 +139,6 @@ while read system; do
 	if [ ! -s ${sysdir}/${system}/002.grid_gen/*bmp ]; then
 		echo "WARNING: ${system} failed grid generation!"
 	fi
-done < ${paramdir}/system_list.txt
+done < ${dtparamdir}/system_list.txt
 
 echo "Next step is to run 003.pose_reproduction.sh"

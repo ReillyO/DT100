@@ -3,9 +3,8 @@
 # Assumes that run.000. script has already been run with desired filepaths
 
 # Script will:
-# - OBLITERATE existing test directories
 # - use wget to fetch a tarball of Mol2 files from the specified URL
-# - extract the Mol2s from the tar file
+# - extract the system files from the tar file
 # - generate the directory structure for grid generation and benchmarking
 # - move each system's files into their respective directory
 # - move junk files to a "trash" directory to be deleted when convenient
@@ -16,9 +15,9 @@
 
 rootdir=${DT_MAINDIR}
 sysdir=${DT_SYSDIR}
-paramdir="${rootdir}/zzz.parameters/"
+dtparamdir="${rootdir}/zzz.parameters/"
 scriptdir="${rootdir}/zzz.scripts"
-DT_PREF="DT${DT_MODE}"
+DT_PREF="DT${DT_SYS}"
 DT_FILE="${DT_PREF}.tar.gz"
 
 if [ ! -e ${rootdir}/${DT_FILE} ]; then 
@@ -36,16 +35,14 @@ fi
 echo -e "Un-tarring files...\n"
 tar -xf ${DT_FILE} --directory ${rootdir}/
 
-if [ -s ${sysdir} ]; then
-	echo -e "Removing old system directory...\n"
-	rm -r ${sysdir}
-fi
 
-if [ -s ${paramdir} ]; then 
+if [ -s ${dtparamdir} ]; then 
 	echo -e "Removing old parameter directory...\n"
-	rm -r ${paramdir}
+	rm -r ${dtparamdir}
 fi
 
+mkdir ${dtparamdir}
+cp ${rootdir}/${DT_PREF}/params/* ${dtparamdir}/
 
 echo -e "Creating directory structure and moving files...\n"
 mkdir ${sysdir}
@@ -57,11 +54,7 @@ while read system; do
 	cp ${rootdir}/${DT_PREF}/${system}/${system}.rec.clean.mol2          ${sysdir}/${system}/001.files/  
 	cp ${rootdir}/${DT_PREF}/${system}/${system}.lig.am1bcc.mol2         ${sysdir}/${system}/001.files/
 	cp ${rootdir}/${DT_PREF}/${system}/${system}.rec.clust.close.sph     ${sysdir}/${system}/001.files/
-done < ${rootdir}/${DT_PREF}/params/system_list.txt
-
-mkdir ${paramdir}
-cp ${rootdir}/${DT_PREF}/params/* ${paramdir}/
-
+done < ${dtparamdir}/system_list.txt
 
 echo -e "Cleaning up workspace...\n"
 if [ -s ${rootdir}/trash/ ]; then rm -r ${rootdir}/trash; fi
