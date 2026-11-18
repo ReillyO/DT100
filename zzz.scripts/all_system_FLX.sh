@@ -13,10 +13,11 @@
 
 
 ### Set some paths
-dockdir="${DT_DOCKHOME}/bin/"
+dockbin="${DT_DOCKHOME}/bin/"
+dockparamdir="${DT_DOCKHOME}/parameters/"
 rootdir="${DT_MAINDIR}"
 sysdir="${DT_SYSDIR}"
-paramdir="${rootdir}/zzz.parameters"
+dtparamdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 
 ### Set random seed
@@ -34,9 +35,9 @@ while read system; do
 	cp ${sysdir}/${system}/001.files/${system}.lig.am1bcc.mol2 ./
 	cp ${sysdir}/${system}/001.files/${system}.rec.clean.mol2 ./
 	cp ${sysdir}/${system}/001.files/${system}.rec.clust.close.sph ./
-	cp ${paramdir}/vdw_AMBER_parm99.defn ./vdw.defn
-	cp ${paramdir}/flex.defn ./flex.defn
-	cp ${paramdir}/flex_drive.tbl ./flex_drive.tbl
+	cp ${dockparamdir}/vdw_AMBER_parm99.defn ./vdw.defn
+	cp ${dockparamdir}/flex.defn ./flex.defn
+	cp ${dockparamdir}/flex_drive.tbl ./flex_drive.tbl
 	
 	# create DOCK input file with system-specific nomenclature
 ########################################################################################
@@ -117,7 +118,7 @@ EOF
 ################################################################################
 	
 	# run DOCK as background process
-	${dockdir}/dock6 -i flex.in -o flex.out &	
+	${dockbin}/dock6 -i flex.in -o flex.out &	
 	
 	cd ${sysdir}
 
@@ -129,7 +130,7 @@ EOF
 
 	nrun=$((nrun+1))
 
-done < ${paramdir}/system_list.txt
+done < ${dtparamdir}/system_list.txt
 
 # ensure all background DOCKing finishes
 wait
@@ -138,6 +139,6 @@ while read sys; do
 	cd ${sysdir}/${sys}/003.pose_rep_${label}/
 	rm -f vdw.defn flex.defn flex_drive.tbl ${system}.lig.am1bcc.mol2 ${system}.rec.clean.mol2 ${system}.rec.clust.close.sph
 	cd ${sysdir}
-done < ${paramdir}/system_list.txt
+done < ${dtparamdir}/system_list.txt
 
 wait
