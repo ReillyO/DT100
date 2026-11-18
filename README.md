@@ -1,5 +1,5 @@
 # DT Test Set Series
-DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 performance.
+DOCKTest: Small test sets of protein-ligand systems to quickly check DOCK6 performance.
 
 # Variants
 
@@ -32,10 +32,10 @@ Before running any scripts, open the `run.000.prepare_env.sh` in a text editor a
 * Change the `MAINDIR` environment variable definition to the desired absolute path
 * Change the `DOCKHOME` variable to an absolute path to a DOCK installation (Note: path should not point to the `bin` folder, but to the folder above it)
 * (optional) Change the `DT_SEEDS` variable to the desired random seeds for the run (by default, runs seeds 1 2 4). 
-* (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~4GB of storage space for the 100-system modes, and ~45GB of space for the 1244 mode)
+* (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~5GB of storage space for the 100-system modes, and ~50GB of space for the 1244 mode)
 * (optional) Change the `DT_NPROC` environment variable to reflect the number of processors that DockTest should attempt to use.
 
-The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.003.pose_reproduction.sh`. More detail on this is provided in Modifications.
+The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.000.setup_env.sh`. More detail on this is provided in Modifications.
 
 ## 3) Run The Scripts 
 ### a) Interactive
@@ -71,13 +71,16 @@ No Poses Generated: no molecules were produced
 
 ### Focused-Library Performance Categories
 
-PerfectID: the top-scoring molecule is the original molecule and reproduces its pose within 2Å RMSD
-UniqPoseID: 
-BuiltPoseID: 
-BuiltChemID:
-BuiltFail:
-Incomplete:
+PerfectID: the top-scoring molecule is the original molecule (TAN=1) and reproduces its pose within 2Å RMSD
+UniqPoseID: the highest-scoring molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
+BuiltPoseID: any molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
+BuiltChemID: any molecule matches the original molecule (TAN=1)
+BuiltFail: no molecules match the original molecule
+Incomplete: no "complete" molecules were reported
 
+## 5) Cleaning 
+
+If desired, specific parts of the DockTest directory can be removed in anticipation of recalculation using the `clean.sh` script located in `zzz.scripts`. Running `bash zzz.scripts/clean.sh` will provide a series of interactive prompts for removing different parts of the directory. Be careful in what you remove. 
 
 # Modifications
 
@@ -97,7 +100,7 @@ The new system should now be recognized and integrated into the benchmark the ne
 
 ## Adding Tests
 
-New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` array definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT .tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
+New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT*.tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
 
 ## Citation
 
