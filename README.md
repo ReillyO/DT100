@@ -12,8 +12,8 @@ DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 p
 ## Tests
 
  * FDPR: Flexible Docking Pose Reproduction - re-docks the ligand of each system to its receptor and checks accuracy
- * FLDN: Focused Library De Novo - generates a fragment library from the system ligand, then attempts to reconstruct it
- * FLGA: Focused Library Genetic Algorithm - shuffles the original ligand via 10 rounds of roulette, then attempts to reconstruct it with 10 rounds of elitism
+ * DNFL: De Novo Focused Library - generates a fragment library from the system ligand, then attempts to reconstruct it
+ * GAFL: Genetic Algorithm Focused Library - shuffles the original ligand via 10 rounds of roulette, then attempts to reconstruct it with 10 rounds of elitism
 
 # Usage
 ## 1) Clone the repository from GitHub
@@ -28,7 +28,7 @@ The `run.xxx` files and `zzz.scripts` folder should download automatically to yo
 
 Before running any scripts, open the `run.000.prepare_env.sh` in a text editor and:
 * Change the `DT_SYS` variable to the desired option (100S, 100R, 1244)
-* Change the `DT_MODE` variable to the desired option (FDPR, FLDN, FLGA)
+* Change the `DT_MODE` variable to the desired option (FDPR, DNFL, GAFL)
 * Change the `MAINDIR` environment variable definition to the desired absolute path
 * Change the `DOCKHOME` variable to an absolute path to a DOCK installation (Note: path should not point to the `bin` folder, but to the folder above it)
 * (optional) Change the `DT_SEEDS` variable to the desired random seeds for the run (by default, runs seeds 1 2 4). 
@@ -45,8 +45,8 @@ The steps can be run one-by-one in an interactive bash terminal in the order ind
 1) `source run.000.setup_env.sh` will set the needed paths in their environment variables.
 2) `bash run.001.fetch_and_organize.sh` will use `wget` to retrieve a tarball of system files, and unpack them into a standardized directory structure.
 3) `bash run.002.generate_grids.sh` will use `grid` to generate receptor grids - this step is computationally intensive.
-4) `bash run.003.pose_reproduction.sh` will use `dock6` to perform pose reproduction trials using all random seeds in the file - this step is computationally intensive.
-5) `bash run.004.analyze.sh` will collect the results of each pose reproduction and report system successes as well as how they compare to the provided reference file - it requires Python3 to be installed and accessible.
+4) `bash run.003.experiments.sh` will use `dock6` to perform the desired benchmarks using all random seeds in the file - this step is computationally intensive.
+5) `bash run.004.analyze.sh` will collect the results of each case and report system successes as well as how they compare to the provided reference file - it requires Python3 to be installed and accessible.
 
 ### b) Automated
 
@@ -58,9 +58,26 @@ If the user has access to a Slurm-enabled computer cluster, the `run_all_steps.s
 
 The script will output a high-level summary file with suffix `_Performance_Summary.txt`, which provides comparison to the reference file in `zzz.parameters` as well as a list of system-seed combinations (hereafter "cases") that produce errors. This should be sufficient for the majority of quick "sanity check" analyses. It is also output to console by the `run.004` script.
 
-The script also provides per-case performance data ("Success", "Sampling Failure", "Scoring Failure") in a CSV file with suffix `_System_Performance.csv` for ready analysis. Rows are labeled with system PDB code (eg, 1A28), and columns with seed labels. If for some reason no docked molecules could be produced, the value will be "No Poses Generated".
+The script also provides per-case performance data with appropriate labels for the given benchmark in a CSV file with suffix `_System_Performance.csv` for ready analysis. Rows are labeled with system PDB code (eg, 1A28), and columns with seed labels. See below for a description of how performance is categorized for different benchmarks.
 
 Finally, per-case RMSDs are collected in a file with suffix `_Raw_Data.csv`, where each row begins with a case label (eg, 1A28_seed1) followed by comma-separated RMSDs in the order they appeared for fine-grain analysis. 
+
+### Pose Reproduction Performance Categories
+
+Success: the top-scoring pose reproduces the experimental pose within 2Å RMSD
+Scoring Failure: a pose within 2Å RMSD was produced, but was not the top-scored pose
+Sampling Failure: a pose within 2Å RMSD was not produced
+No Poses Generated: no molecules were produced
+
+### Focused-Library Performance Categories
+
+PerfectID: the top-scoring molecule is the original molecule and reproduces its pose within 2Å RMSD
+UniqPoseID: 
+BuiltPoseID: 
+BuiltChemID:
+BuiltFail:
+Incomplete:
+
 
 # Modifications
 
