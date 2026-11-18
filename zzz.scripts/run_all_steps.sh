@@ -22,7 +22,7 @@ wait
 echo `date`
 
 # dock all ligands
-bash run.003.pose_reproduction.sh
+bash run.003.experiments.sh
 wait
 
 echo `date`
