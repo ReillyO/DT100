@@ -35,8 +35,6 @@ Before running any scripts, open the `run.000.prepare_env.sh` in a text editor a
 * (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~5GB of storage space for the 100-system modes, and ~50GB of space for the 1244 mode)
 * (optional) Change the `DT_NPROC` environment variable to reflect the number of processors that DockTest should attempt to use.
 
-The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.000.setup_env.sh`. More detail on this is provided in Modifications.
-
 ## 3) Run The Scripts 
 ### a) Interactive
 
@@ -98,11 +96,7 @@ After unpacking the downloaded TAR file, the `SYSDIR` directory contains a direc
 4) In the `zzz.parameters` directory, there is a file named `system_list.txt` that is referenced by the scripts. Open it in a text editor, and add the new system PDB code on a new line.
 The new system should now be recognized and integrated into the benchmark the next time it is run. If this system is to be permanently integrated into the testset, any errors it produces should be added to the `ref_DT100_Performance_Summary.txt` file for future distribution.
 
-## Adding Tests
-
-New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT*.tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
-
-## Citation
+# Citation
 
 If you use this test suite, please cite "Pose Reproduction, Cross Docking, Database Enrichment, and Reverse Docking Benchmarks for DOCK6, Vina, and AutoDock 4 with Emphasis on Approved Drugs" published in JCIM by Corbo et al., from which the systems and broad preparation protocols were derived.
 
