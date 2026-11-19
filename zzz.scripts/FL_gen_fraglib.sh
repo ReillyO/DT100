@@ -7,9 +7,10 @@
 #     in the provided home dir 
 
 dockdir="${DT_DOCKHOME}/bin/"
+dockparamdir="${DT_DOCKHOME}/parameters/"
 rootdir="${DT_MAINDIR}"
 sysdir="${DT_SYSDIR}"
-paramdir="${rootdir}/zzz.parameters"
+dtparamdir="${rootdir}/zzz.parameters"
 scriptdir="${rootdir}/zzz.scripts"
 
 while IFS= read -r system; do
@@ -20,9 +21,9 @@ while IFS= read -r system; do
 	cd 003.fraglib
 
 	cp ${sysdir}/${system}/001.files/${system}.lig.am1bcc.mol2 ./
-	cp ${paramdir}/vdw_AMBER_parm99.defn ./vdw.defn
-        cp ${paramdir}/flex.defn ./flex.defn
-        cp ${paramdir}/flex_drive.tbl ./flex_drive.tbl
+	cp ${dockparamdir}/vdw_AMBER_parm99.defn ./vdw.defn
+        cp ${dockparamdir}/flex.defn ./flex.defn
+        cp ${dockparamdir}/flex_drive.tbl ./flex_drive.tbl
 	
 	cat <<EOF>frag.in
 conformer_search_type                                        flex
@@ -57,8 +58,8 @@ EOF
 	${dockdir}/dock6 -i frag.in -o frag.out
 
 	# produces unique_full_sorted_fraglib.dat for future use
-	python ${dockdir}/combine_torenv.py ${DT_DOCKHOME}/parameters/fraglib_torenv.dat GA_torenv.dat
+	python ${dockdir}/combine_torenv.py ${dockparamdir}/fraglib_torenv.dat GA_torenv.dat
 
 	rm vdw.defn flex.defn flex_drive.tbl ${system}.lig.am1bcc.mol2
 		
-done < ${paramdir}/system_list.txt
+done < ${dtparamdir}/system_list.txt

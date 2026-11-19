@@ -18,12 +18,15 @@ def performance_string_from_lists(tan_list, rmsd_list):
     if rmsd_list[0] == 12345678: return "Incomplete"
     if tan_list[0] == 1.0 and rmsd_list[0] < 2.0: return "PerfectID"
     found_built = False
+    match_count = 0
     for i in range(1, len(tan_list)):
         if tan_list[i] == 1.0:
-            found_built = True
-            if rmsd_list[i] < 2.0:
+            match_count += 1
+            if rmsd_list[i] < 2.0 and match_count == 1:
+                return "UniqPoseID"
+            elif rmsd_list[i] < 2.0:
                 return "BuiltPoseID"
-    if found_built: return "BuiltChemID"
+    if match_count > 0: return "BuiltChemID"
     return "BuiltFail"
 
 # read in requisite files

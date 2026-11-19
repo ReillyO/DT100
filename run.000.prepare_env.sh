@@ -87,4 +87,4 @@ else
 fi
 
 
-echo "Environment setup script complete for DT${DT_MODE} using the ${DT_SYS} system set. Correct any errors if noted."
+echo "Environment setup script complete for ${DT_MODE} using the ${DT_SYS} system set. Correct any errors if noted."
