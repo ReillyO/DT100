@@ -64,19 +64,19 @@ Finally, per-case RMSDs are collected in a file with suffix `_Raw_Data.csv`, whe
 
 ### Pose Reproduction Performance Categories
 
-Success: the top-scoring pose reproduces the experimental pose within 2Å RMSD
-Scoring Failure: a pose within 2Å RMSD was produced, but was not the top-scored pose
-Sampling Failure: a pose within 2Å RMSD was not produced
-No Poses Generated: no molecules were produced
+ * Success: the top-scoring pose reproduces the experimental pose within 2Å RMSD
+ * Scoring Failure: a pose within 2Å RMSD was produced, but was not the top-scored pose
+ * Sampling Failure: a pose within 2Å RMSD was not produced
+ * No Poses Generated: no molecules were produced
 
 ### Focused-Library Performance Categories
 
-PerfectID: the top-scoring molecule is the original molecule (TAN=1) and reproduces its pose within 2Å RMSD
-UniqPoseID: the highest-scoring molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
-BuiltPoseID: any molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
-BuiltChemID: any molecule matches the original molecule (TAN=1)
-BuiltFail: no molecules match the original molecule
-Incomplete: no "complete" molecules were reported
+ * PerfectID: the top-scoring molecule is the original molecule (TAN=1) and reproduces its pose within 2Å RMSD
+ * UniqPoseID: the highest-scoring molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
+ * BuiltPoseID: any molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
+ * BuiltChemID: any molecule matches the original molecule (TAN=1)
+ * BuiltFail: no molecules match the original molecule
+ * Incomplete: no "complete" molecules were reported
 
 ## 5) Cleaning 
 
