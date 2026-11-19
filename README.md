@@ -1,5 +1,5 @@
 # DT Test Set Series
-DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 performance.
+DOCKTest: Small test sets of protein-ligand systems to quickly check DOCK6 performance.
 
 # Variants
 
@@ -12,8 +12,8 @@ DOCKTest: Truncated test sets of protein-ligand systems to quickly check DOCK6 p
 ## Tests
 
  * FDPR: Flexible Docking Pose Reproduction - re-docks the ligand of each system to its receptor and checks accuracy
- * FLDN: Focused Library De Novo - generates a fragment library from the system ligand, then attempts to reconstruct it
- * FLGA: Focused Library Genetic Algorithm - shuffles the original ligand via 10 rounds of roulette, then attempts to reconstruct it with 10 rounds of elitism
+ * DNFL: De Novo Focused Library - generates a fragment library from the system ligand, then attempts to reconstruct it
+ * GAFL: Genetic Algorithm Focused Library - shuffles the original ligand via 10 rounds of roulette, then attempts to reconstruct it with 10 rounds of elitism
 
 # Usage
 ## 1) Clone the repository from GitHub
@@ -28,14 +28,14 @@ The `run.xxx` files and `zzz.scripts` folder should download automatically to yo
 
 Before running any scripts, open the `run.000.prepare_env.sh` in a text editor and:
 * Change the `DT_SYS` variable to the desired option (100S, 100R, 1244)
-* Change the `DT_MODE` variable to the desired option (FDPR, FLDN, FLGA)
+* Change the `DT_MODE` variable to the desired option (FDPR, DNFL, GAFL)
 * Change the `MAINDIR` environment variable definition to the desired absolute path
 * Change the `DOCKHOME` variable to an absolute path to a DOCK installation (Note: path should not point to the `bin` folder, but to the folder above it)
 * (optional) Change the `DT_SEEDS` variable to the desired random seeds for the run (by default, runs seeds 1 2 4). 
-* (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~4GB of storage space for the 100-system modes, and ~45GB of space for the 1244 mode)
+* (optional) Change the `SYSDIR` environment variable definition to desired path if storage space is a concern (the full system folder will eventually require ~5GB of storage space for the 100-system modes, and ~50GB of space for the 1244 mode)
 * (optional) Change the `DT_NPROC` environment variable to reflect the number of processors that DockTest should attempt to use.
 
-The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.003.pose_reproduction.sh`. More detail on this is provided in Modifications.
+The pose reproduction simplex random seed trials are also modifiable and can be edited by adding or changing values in the array in `run.000.setup_env.sh`. More detail on this is provided in Modifications.
 
 ## 3) Run The Scripts 
 ### a) Interactive
@@ -45,8 +45,8 @@ The steps can be run one-by-one in an interactive bash terminal in the order ind
 1) `source run.000.setup_env.sh` will set the needed paths in their environment variables.
 2) `bash run.001.fetch_and_organize.sh` will use `wget` to retrieve a tarball of system files, and unpack them into a standardized directory structure.
 3) `bash run.002.generate_grids.sh` will use `grid` to generate receptor grids - this step is computationally intensive.
-4) `bash run.003.pose_reproduction.sh` will use `dock6` to perform pose reproduction trials using all random seeds in the file - this step is computationally intensive.
-5) `bash run.004.analyze.sh` will collect the results of each pose reproduction and report system successes as well as how they compare to the provided reference file - it requires Python3 to be installed and accessible.
+4) `bash run.003.experiments.sh` will use `dock6` to perform the desired benchmarks using all random seeds in the file - this step is computationally intensive.
+5) `bash run.004.analyze.sh` will collect the results of each case and report system successes as well as how they compare to the provided reference file - it requires Python3 to be installed and accessible.
 
 ### b) Automated
 
@@ -58,9 +58,29 @@ If the user has access to a Slurm-enabled computer cluster, the `run_all_steps.s
 
 The script will output a high-level summary file with suffix `_Performance_Summary.txt`, which provides comparison to the reference file in `zzz.parameters` as well as a list of system-seed combinations (hereafter "cases") that produce errors. This should be sufficient for the majority of quick "sanity check" analyses. It is also output to console by the `run.004` script.
 
-The script also provides per-case performance data ("Success", "Sampling Failure", "Scoring Failure") in a CSV file with suffix `_System_Performance.csv` for ready analysis. Rows are labeled with system PDB code (eg, 1A28), and columns with seed labels. If for some reason no docked molecules could be produced, the value will be "No Poses Generated".
+The script also provides per-case performance data with appropriate labels for the given benchmark in a CSV file with suffix `_System_Performance.csv` for ready analysis. Rows are labeled with system PDB code (eg, 1A28), and columns with seed labels. See below for a description of how performance is categorized for different benchmarks.
 
 Finally, per-case RMSDs are collected in a file with suffix `_Raw_Data.csv`, where each row begins with a case label (eg, 1A28_seed1) followed by comma-separated RMSDs in the order they appeared for fine-grain analysis. 
+
+### Pose Reproduction Performance Categories
+
+Success: the top-scoring pose reproduces the experimental pose within 2Å RMSD
+Scoring Failure: a pose within 2Å RMSD was produced, but was not the top-scored pose
+Sampling Failure: a pose within 2Å RMSD was not produced
+No Poses Generated: no molecules were produced
+
+### Focused-Library Performance Categories
+
+PerfectID: the top-scoring molecule is the original molecule (TAN=1) and reproduces its pose within 2Å RMSD
+UniqPoseID: the highest-scoring molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
+BuiltPoseID: any molecule matching the original molecule (TAN=1) reproduces its pose within 2Å RMSD
+BuiltChemID: any molecule matches the original molecule (TAN=1)
+BuiltFail: no molecules match the original molecule
+Incomplete: no "complete" molecules were reported
+
+## 5) Cleaning 
+
+If desired, specific parts of the DockTest directory can be removed in anticipation of recalculation using the `clean.sh` script located in `zzz.scripts`. Running `bash zzz.scripts/clean.sh` will provide a series of interactive prompts for removing different parts of the directory. Be careful in what you remove. 
 
 # Modifications
 
@@ -80,7 +100,7 @@ The new system should now be recognized and integrated into the benchmark the ne
 
 ## Adding Tests
 
-New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` array definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT .tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
+New simplex random seed tests can be created by opening the `run.000.prepare_env.sh` script in a text editor and adding new values to the `random_seeds` definition. Note that this script must be run using `source` again for this change to take effect. These tests will automatically integrated next time the benchmark is run, and noted in the analysis summary. The reference files contained in each of the DT*.tar.gz files at time of writing contain data on random seeds 1 thru 10 for the systems of that trial, so any of these can be added if additional data is desired.
 
 ## Citation
 
